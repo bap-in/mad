@@ -1,0 +1,68 @@
+JAVA CODE 
+
+package com.example.bca_program5;
+import android.os.Bundle;
+import android.widget.RelativeLayout;
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+public class MainActivity extends AppCompatActivity {
+RelativeLayout rl;
+ @Override
+ protected void onCreate(Bundle savedInstanceState) {
+ super.onCreate(savedInstanceState);
+ EdgeToEdge.enable(this);
+ setContentView(R.layout.activity_main);
+ rl=findViewById(R.id.main);
+ rl.setBackground(ResourcesCompat.getDrawable(getResources(),
+R.drawable.back_drawable, null));
+ }
+}
+
+
+XML CODE
+
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+ xmlns:app="http://schemas.android.com/apk/res-auto"
+ xmlns:tools="http://schemas.android.com/tools"
+ android:id="@+id/main"
+ android:layout_width="match_parent"
+ android:layout_height="match_parent"
+ tools:context=".MainActivity">
+ <TextView
+ android:layout_width="match_parent"
+ android:layout_height="wrap_content"
+ android:id="@+id/TVHead"
+ android:layout_centerInParent="true"
+ android:layout_margin="20dp"
+ android:gravity="center"
+ android:padding="10dp"
+ android:text="Background drawable in Android"
+ android:textAlignment="center"
+ android:textColor="@color/black"
+ android:textSize="20sp"
+ android:textStyle="bold"/>
+ />
+</RelativeLayout>
+
+
+Create back_drawable.xml :
+1. Right Click drawable folder,new →Drawable Resource File→New→back_drawable.
+2.Under Drawable a new file back_drawable is created. Type the following xml code in it.
+
+XML CODE
+
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+<gradient
+ android:angle="270"
+ android:endColor="@color/white"
+ android:startColor="#2C3A87"/>
+</shape>
+</RelativeLayout>

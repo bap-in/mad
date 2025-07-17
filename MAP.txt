@@ -1,0 +1,115 @@
+XML CODE
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ xmlns:tools="http://schemas.android.com/tools"
+ android:layout_width="match_parent"
+ android:layout_height="match_parent"
+ android:orientation="vertical"
+ android:padding="16dp"
+ tools:context=".MainActivity">
+ <TextView
+ android:id="@+id/locationTextView"
+ android:layout_width="wrap_content"
+ android:layout_height="wrap_content"
+ android:textSize="18sp" />
+</LinearLayout>
+
+Android Manifest.xml code highlighted code to be added
+
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+ xmlns:tools="http://schemas.android.com/tools">
+ <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+ <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+ <application
+ android:allowBackup="true"
+ android:dataExtractionRules="@xml/data_extraction_rules"
+ android:fullBackupContent="@xml/backup_rules"
+ android:icon="@mipmap/ic_launcher"
+ android:label="@string/app_name"
+ android:roundIcon="@mipmap/ic_launcher_round"
+ android:supportsRtl="true"
+ android:theme="@style/Theme.GPS"
+ tools:targetApi="31">
+ <activity
+ android:name=".MainActivity"
+ android:exported="true">
+ <intent-filter>
+ <action android:name="android.intent.action.MAIN" />
+ <category android:name="android.intent.category.LAUNCHER" />
+ </intent-filter>
+ </activity>
+ </application>
+</manifest>
+
+
+JAVA CODE (MAIN)
+
+package com.example.gps;
+import android.content.pm.PackageManager;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Bundle;
+import android.location.Location;
+import android.widget.TextView;
+import android.Manifest;
+import androidx.activity.EdgeToEdge;
+39
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+public class MainActivity extends AppCompatActivity implements LocationListener {
+ private LocationManager locationManager;
+ private TextView locationTextView;
+ @Override
+ protected void onCreate(Bundle savedInstanceState) {
+ super.onCreate(savedInstanceState);
+ setContentView(R.layout.activity_main);
+ locationTextView = findViewById(R.id.locationTextView);
+ if (ContextCompat.checkSelfPermission(this,
+Manifest.permission.ACCESS_FINE_LOCATION) !=
+PackageManager.PERMISSION_GRANTED) {
+ ActivityCompat.requestPermissions(this, new
+String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+ }
+ // Get a reference to the location manager
+ locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+ }
+ protected void onResume() {
+ super.onResume();
+// Request location updates from the location manager
+ if (ContextCompat.checkSelfPermission(this,
+ Manifest.permission.ACCESS_FINE_LOCATION) ==
+ PackageManager.PERMISSION_GRANTED) {
+ locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
+this);
+ }
+ }
+// protected void onPause() {
+// super.onPause();
+//// Sto p receiving location updates when the activity is paused
+// locationManager.removeUpdates(this);
+// }
+ @Override
+ public void onLocationChanged(@NonNull Location location) {
+ locationTextView.setText("Latitude: " + location.getLatitude() + ", Longitude: " +
+ location.getLongitude());
+ }
+ @Override
+ public void onStatusChanged(String provider, int status, Bundle extras) {
+ LocationListener.super.onStatusChanged(provider, status, extras);
+ }
+ @Override
+public void onProviderEnabled(@NonNull String provider) {
+ LocationListener.super.onProviderEnabled(provider);
+ }
+ @Override
+ public void onProviderDisabled(@NonNull String provider) {
+ LocationListener.super.onProviderDisabled(provider);
+ }
+}

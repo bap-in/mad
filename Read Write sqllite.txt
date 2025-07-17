@@ -1,0 +1,214 @@
+JAVA CODE
+
+package com.example.sql1;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+public class MainActivity extends AppCompatActivity {
+SQLiteDatabase db;
+EditText et1,et2,et3;
+Button b1,b2,b3,b4;
+String rno;
+String name;
+String dept;
+ @Override
+ protected void onCreate(Bundle savedInstanceState) {
+ super.onCreate(savedInstanceState);
+ setContentView(R.layout.activity_main);
+ et1=findViewById(R.id.et1);
+ et2=findViewById(R.id.et2);
+ et3=findViewById(R.id.et3);
+ b1=findViewById(R.id.b1);
+ b2=findViewById(R.id.b2);
+ b3=findViewById(R.id.b3);
+ b4=findViewById(R.id.b4);
+ DBhelper dBhelper=new DBhelper(this);
+ db=dBhelper.getReadableDatabase();
+ db=dBhelper.getWritableDatabase();
+ }
+ public void onUpdate(View view) {
+ rno=et1.getText().toString();
+ name=et2.getText().toString();
+ dept=et3.getText().toString();
+ if(rno.equals("")|| name.equals("")||dept.equals(""))
+ {
+ Toast.makeText(this, "Please enter values",
+Toast.LENGTH_LONG).show();
+ return;
+ }else {
+ ContentValues values = new ContentValues();
+ values.put("rollno", rno);
+ values.put("name", name);
+ values.put("dept", dept);
+ db.update("student", values,
+ "rollno="+rno,null);
+ Toast.makeText(this, "Values Inserted" +
+ "Successfully", Toast.LENGTH_LONG).show();
+ } }
+ public void onRead(View view) {
+ StringBuffer buffer=new StringBuffer();
+ Cursor c=db.rawQuery("select * from student",
+ null);
+ while(c.moveToNext()) {
+ buffer.append("\n" + c.getString(0));
+ buffer.append("\n" + c.getString(1));
+ buffer.append("\n" + c.getString(2));
+ }
+ Toast.makeText(this,buffer.toString(),
+ Toast.LENGTH_LONG).show();
+}
+ public void onInsert(View view) {
+ rno=et1.getText().toString();
+ name=et2.getText().toString();
+ dept=et3.getText().toString();
+ if(rno.equals("")|| name.equals("")||dept.equals(""))
+ {
+ Toast.makeText(this, "Please enter values",
+Toast.LENGTH_LONG).show();
+ return;
+ }else {
+ ContentValues values = new ContentValues();
+ values.put("rollno", rno);
+ values.put("name", name);
+ values.put("dept", dept);
+ db.insert("student", null, values);
+ Toast.makeText(this, "Values Inserted" +
+ "Successfully", Toast.LENGTH_LONG).show();
+ }
+ }
+ public void onDelete(View view) {
+ rno=et1.getText().toString();
+ name=et2.getText().toString();
+ dept=et3.getText().toString();
+ if(rno.equals(""))
+ {
+ Toast.makeText(this,"Please enter roll no",
+ Toast.LENGTH_LONG).show();
+ return;} else{
+ db.delete("student","rollno="+rno,
+ null);
+ Toast.makeText(this,"Values Deleted Successfully",
+ Toast.LENGTH_LONG).show();
+ }
+ }
+} 
+
+
+Go to main→java→com.example.program10,Right click →new→Java class→DBhelper,
+select class.
+
+Java Code(DBhelper.java)
+
+package com.example.sql1;
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+32
+import androidx.annotation.Nullable;
+public class DBhelper extends SQLiteOpenHelper {
+ public DBhelper(@Nullable Context context) {
+ super(context, "student", null, 1);
+ }
+ @Override
+ public void onCreate(SQLiteDatabase sqLiteDatabase) {
+ sqLiteDatabase.execSQL("create table " +
+ "student(rollno int,name varchar(20)," +
+ "dept varchar(5))");
+ }
+ @Override
+ public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+sqLiteDatabase.execSQL("drop table if exists student");
+onCreate(sqLiteDatabase);
+ }
+}
+
+XML CODE
+
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+ xmlns:app="http://schemas.android.com/apk/res-auto"
+ xmlns:tools="http://schemas.android.com/tools"
+ android:id="@+id/main"
+ android:layout_width="match_parent"
+ android:layout_height="match_parent"
+ tools:context=".MainActivity">
+ <TextView
+ android:layout_width="wrap_content"
+ android:layout_height="wrap_content"
+ android:text="Student Details"
+ android:textSize="25dp"
+ android:layout_centerHorizontal="true"/>
+ <EditText
+ android:layout_width="match_parent"
+ android:layout_height="wrap_content"
+ android:hint="Rollno"
+ android:id="@+id/et1"
+ android:layout_marginTop="50dp"/>
+ <EditText
+ android:layout_width="match_parent"
+ android:layout_height="wrap_content"
+ android:hint="Name"
+ android:id="@+id/et2"
+ android:layout_marginTop="35dp"
+ android:layout_below="@id/et1"
+ android:layout_centerHorizontal="true"/>
+ <EditText
+ android:layout_width="match_parent"
+ android:layout_height="wrap_content"
+ android:hint="Department"
+ android:id="@+id/et3"
+ android:layout_marginTop="35dp"
+ android:layout_below="@id/et2"
+ android:layout_centerHorizontal="true"/>
+ <Button
+ android:layout_width="wrap_content"
+ android:layout_height="wrap_content"
+ android:id="@+id/b1"
+ android:layout_below="@id/et3"
+ android:text="Update"
+ android:onClick="onUpdate"
+ android:textSize="20dp"
+ android:layout_centerHorizontal="true"
+ android:layout_marginTop="30dp"/>
+ <Button
+android:layout_width="wrap_content"
+ android:layout_height="wrap_content"
+ android:id="@+id/b2"
+ android:layout_below="@id/b1"
+ android:text="Read"
+ android:onClick="onRead"
+ android:textSize="20dp"
+ android:layout_centerHorizontal="true"
+ android:layout_marginTop="30dp"/>
+ <Button
+ android:layout_width="wrap_content"
+ android:layout_height="wrap_content"
+ android:id="@+id/b3"
+ android:layout_below="@id/b2"
+ android:text="Insert"
+ android:onClick="onInsert"
+ android:textSize="20dp"
+ android:layout_centerHorizontal="true"
+ android:layout_marginTop="30dp"/>
+ <Button
+ android:layout_width="wrap_content"
+ android:layout_height="wrap_content"
+ android:id="@+id/b4"
+ android:layout_below="@id/b3"
+ android:text="Delete"
+ android:onClick="onDelete"
+ android:textSize="20dp"
+ android:layout_centerHorizontal="true"
+ android:layout_marginTop="30dp"/>
+</RelativeLayout>
