@@ -93,6 +93,8 @@ MANIFEST XML CODE
 
 MAIN_MENU.XML CODE
 
+APP -> RES -> MENU -> MAIN_MENU.XML
+
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
